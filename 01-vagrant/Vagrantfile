@@ -1,33 +1,30 @@
 Vagrant.configure("2") do |config|
   config.vm.hostname = "hometask-1-2"
-  config.vm.box = "generic/debian9"
+  config.vm.box = "itacad-hometask-01"
   
   config.vm.network "forwarded_port", guest: 80, host: 8080
   config.vm.network "forwarded_port", guest: 81, host: 8081
 
   config.vm.provider "virtualbox" do |vb|
-    vb.name = "hometask-1.2"
+    vb.name = "hometask-1-2"
     vb.memory = "512"
   end
 
   config.vm.provision "shell", inline: <<-SHELL
-    sudo apt update
-    sudo apt install -y apache2
-    sudo apt install -y php
+    sudo firewall-cmd --permanent --zone=public --add-service=http
+    sudo firewall-cmd --permanent --zone=public --add-port=81/tcp
+    sudo firewall-cmd --reload
     sudo mkdir /var/www/php/
-    sudo chmod -R o+w /var/www/
-    sudo chmod -R o+w /etc/apache2/
-  SHELL
+    sudo mkdir /etc/httpd/sites-available /etc/httpd/sites-enabled
+    sudo cp /vagrant/index.html /var/www/html/
+    sudo cp /vagrant/index.php /var/www/php/
+    sudo cp /vagrant/000-default.conf /etc/httpd/sites-available/
+    sudo ln -s /etc/httpd/sites-available/000-default.conf /etc/httpd/sites-enabled/000-default.conf
+    sudo chmod o+w /etc/httpd/conf/httpd.conf
+    sudo echo "IncludeOptional sites-enabled/*.conf" >> /etc/httpd/conf/httpd.conf
+    sudo chmod o-w /etc/httpd/conf/httpd.conf
+    echo "Listen 81" >> /etc/httpd/conf/httpd.conf
+    sudo systemctl restart httpd
+ SHELL
 
-  config.vm.provision "file", source: "./index.html", destination: "/var/www/html/"
-  config.vm.provision "file", source: "./index.php", destination: "/var/www/php/"
-  config.vm.provision "file", source: "./ports.conf", destination: "/etc/apache2/"
-  config.vm.provision "file", source: "./000-default.conf", destination: "/etc/apache2/sites-available/"
-
-  config.vm.provision "shell", inline: <<-SHELL
-  sudo chmod -R o-w /var/www/
-  sudo chmod -R o-w /etc/apache2/
-SHELL
-
-  config.vm.provision "shell", inline: "sudo systemctl restart apache2"
 end
