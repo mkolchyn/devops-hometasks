@@ -12,6 +12,7 @@ config.vm.network "forwarded_port", guest: 81, host: 8081
   end
 
    config.vm.provision "shell", inline: <<-SHELL
+    sudo apt update
     sudo apt install -y lxc
     sudo cp /vagrant/lxc-net /etc/default/lxc-net
     sudo systemctl enable lxc-net.service
