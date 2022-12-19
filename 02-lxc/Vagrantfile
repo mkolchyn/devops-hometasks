@@ -1,0 +1,45 @@
+Vagrant.configure("2") do |config|
+  config.vm.hostname = "02-lxc"
+  config.vm.box = "generic/debian10"
+  config.vm.synced_folder ".", "/vagrant"
+
+config.vm.network "forwarded_port", guest: 80, host: 8080
+config.vm.network "forwarded_port", guest: 81, host: 8081
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.name = "02-lxc"
+    vb.memory = "1024"
+  end
+
+   config.vm.provision "shell", inline: <<-SHELL
+    sudo apt install -y lxc
+    sudo cp /vagrant/lxc-net /etc/default/lxc-net
+    sudo systemctl enable lxc-net.service
+    sudo systemctl start lxc-net.service
+    sudo systemctl enable lxc
+    sudo systemctl start lxc
+    
+# /// Containers configuration 
+    sudo DOWNLOAD_KEYSERVER="hkp://keyserver.ubuntu.com" lxc-create -t download -n static -- -d centos -r 8-Stream -a amd64
+    sudo cp /vagrant/config_static /var/lib/lxc/static/config
+    sudo lxc-start static
+    sudo DOWNLOAD_KEYSERVER="hkp://keyserver.ubuntu.com" lxc-create -t download -n dynamic -- -d centos -r 8-Stream -a amd64
+    sudo cp /vagrant/config_dynamic /var/lib/lxc/dynamic/config
+    sudo lxc-start dynamic
+    sudo lxc-attach static -- yum install -y httpd
+    sudo lxc-attach static -- systemctl enable httpd
+    sudo lxc-attach static -- systemctl start httpd
+    sudo cp /vagrant/index.html /var/lib/lxc/static/rootfs/var/www/html/
+    sudo lxc-attach dynamic -- yum install -y httpd php
+    sudo lxc-attach dynamic -- systemctl enable httpd
+    sudo lxc-attach dynamic -- systemctl start httpd
+    sudo lxc-attach dynamic -- systemctl enable php-fpm
+    sudo cp /vagrant/index.php /var/lib/lxc/dynamic/rootfs/var/www/html/
+
+    sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination 10.0.100.100:80
+    sudo iptables -t nat -A PREROUTING -p tcp --dport 81 -j DNAT --to-destination 10.0.100.101:80
+    sudo iptables -t nat -A POSTROUTING -j MASQUERADE
+
+SHELL
+
+end
