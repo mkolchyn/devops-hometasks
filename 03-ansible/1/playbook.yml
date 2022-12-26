@@ -1,0 +1,9 @@
+name: Install apache httpd
+  ansible.builtin.apt:
+    name: apache2
+    state: present
+
+name: Install apache php
+  ansible.builtin.apt:
+    name: php
+    state: present
