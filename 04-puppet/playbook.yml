@@ -1,0 +1,42 @@
+
+# master.puppet
+- name: Master node configuration
+  hosts: master.puppet
+  become: yes
+  tasks:
+  - ansible.builtin.yum:
+      name: 
+        - https://yum.puppet.com/puppet7-release-el-8.noarch.rpm
+        - puppetserver
+        - git
+      state: present
+  - ansible.builtin.systemd:
+      state: started
+      enabled: yes
+      name: puppetserver
+
+# slave1.puppet
+- name: Slave1 node configuration
+  hosts: slave1.puppet
+  become: yes
+  tasks:
+  - ansible.builtin.yum:
+      name:
+        - puppet-agent
+        - httpd
+      state: present
+  - ansible.builtin.systemd:
+      state: started
+      enabled: yes
+      name:
+        - puppet-agent
+        - httpd
+
+# # slave2.puppet
+# - name: Slave2 node configuration
+#   hosts: slave2.puppet
+#   become: yes
+#   tasks:
+#   - ansible.builtin.yum:
+#       name: httpd
+#       state: present
