@@ -33,10 +33,6 @@
         [agent]
         server = master
         runinterval = 1m
-  - name: Terminating firewall
-    ansible.builtin.systemd:
-      state: stopped
-      name: firewalld
   - name: Configuring hosts file
     ansible.builtin.lineinfile:
       path: /etc/hosts
