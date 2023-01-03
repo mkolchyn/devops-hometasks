@@ -62,7 +62,7 @@
         :cachedir: '/var/cache/r10k'
         :sources:
           :my-org:
-            remote: 'https://github.com/mkolchyn/master-puppet.git'
+            remote: 'https://github.com/mkolchyn/04-hw-master.git'
             basedir: '/etc/puppetlabs/code/environments'   
       dest: /etc/puppetlabs/r10k/r10k.yaml
   - name: Syncing r10k (shell)
