@@ -1,0 +1,156 @@
+- name: Master node configuration
+  hosts: master
+  become: yes
+
+  tasks:
+  - name: Adding Puppet repository (shell)
+    ansible.builtin.shell:
+      cmd: rpm -Uvh http://yum.puppet.com/puppet7-release-el-8.noarch.rpm
+  - name: Pkg installation
+    ansible.builtin.yum:
+      name:
+        - puppetserver
+        - git
+        - gem
+      state: present
+  - name: Init settings for Puppet Server
+    ansible.builtin.lineinfile:
+      path: /etc/sysconfig/puppetserver
+      regexp: '^JAVA_ARGS='
+      line: JAVA_ARGS="-Xms256m -Xmx256m -Djruby.logger.class=com.puppetlabs.jruby_utils.jruby.Slf4jLogger"
+  - name: Configuring Puppet Agent
+    ansible.builtin.blockinfile:
+      path: /etc/puppetlabs/puppet/puppet.conf
+      block: |
+        autosign = true
+        
+        [agent]
+        server = master
+        runinterval = 1m
+  - name: Configuring hosts file
+    ansible.builtin.lineinfile:
+      path: /etc/hosts
+      line: 127.0.0.1 master
+  - name: Installing r10k (shell)
+    ansible.builtin.shell:
+      cmd: |
+          yum module reset -y ruby
+          yum install -y @ruby:2.6
+          gem install r10k
+  - name: Create a directory for r10k config file
+    ansible.builtin.file:
+      path: /etc/puppetlabs/r10k/
+      state: directory
+      recurse: yes
+  - name: Creating r10k config file
+    ansible.builtin.copy:
+      content: |
+        :cachedir: '/var/cache/r10k'
+        :sources:
+          :my-org:
+            remote: 'https://github.com/mkolchyn/05-hw-puppet.git'
+            basedir: '/etc/puppetlabs/code/environments'   
+      dest: /etc/puppetlabs/r10k/r10k.yaml
+  - name: Syncing r10k (shell)
+    ansible.builtin.shell:
+      cmd: /usr/local/bin/r10k deploy environment -p
+  - name: Running Puppet server
+    ansible.builtin.systemd:
+      state: started
+      enabled: yes
+      name: puppetserver
+  - name: Running Puppet agent
+    ansible.builtin.systemd:
+      state: started
+      enabled: yes
+      name: puppet
+
+# slave1
+- name: Slave1 node configuration
+  hosts: slave1
+  become: yes
+  
+  tasks:
+  - name: Adding Puppet repository (shell)
+    ansible.builtin.shell:
+      cmd: rpm -Uvh http://yum.puppet.com/puppet7-release-el-8.noarch.rpm
+  - name: Installing Puppet Agent
+    ansible.builtin.yum:
+      name: puppet-agent
+      state: present
+  - name: Configuring Puppet Agent
+    ansible.builtin.blockinfile:
+      path: /etc/puppetlabs/puppet/puppet.conf
+      block: |
+        [agent]
+        server = master
+        runinterval = 1m
+  - name: Configuring hosts file
+    ansible.builtin.lineinfile:
+      path: /etc/hosts
+      line: 192.168.50.25 master
+  - name: Running Puppet Agent
+    ansible.builtin.systemd:
+      state: started
+      enabled: yes
+      name: puppet
+
+# slave2
+- name: Slave2 node configuration
+  hosts: slave2
+  become: yes
+  
+  tasks:
+  - name: Adding Puppet repository (shell)
+    ansible.builtin.shell:
+      cmd: rpm -Uvh http://yum.puppet.com/puppet7-release-el-8.noarch.rpm
+  - name: Installing Puppet Agent
+    ansible.builtin.yum:
+      name: puppet-agent
+      state: present
+  - name: Configuring Puppet Agent
+    ansible.builtin.blockinfile:
+      path: /etc/puppetlabs/puppet/puppet.conf
+      block: |
+        [agent]
+        server = master
+        runinterval = 1m
+  - name: Configuring hosts file
+    ansible.builtin.lineinfile:
+      path: /etc/hosts
+      line: 192.168.50.25 master
+  - name: Running Puppet Agent
+    ansible.builtin.systemd:
+      state: started
+      enabled: yes
+      name: puppet
+
+# mineserver.puppet
+- name: Mineserver.puppet node configuration
+  hosts: mineserver.puppet
+  become: yes
+  
+  tasks:
+  - name: Adding Puppet repository (shell)
+    ansible.builtin.shell:
+      cmd: rpm -Uvh http://yum.puppet.com/puppet7-release-el-8.noarch.rpm
+  - name: Installing Puppet Agent
+    ansible.builtin.yum:
+      name: puppet-agent
+      state: present
+  - name: Configuring Puppet Agent
+    ansible.builtin.blockinfile:
+      path: /etc/puppetlabs/puppet/puppet.conf
+      block: |
+        [agent]
+        server = master
+        runinterval = 1m
+  - name: Configuring hosts file
+    ansible.builtin.lineinfile:
+      path: /etc/hosts
+      line: 192.168.50.25 master
+  - name: Running Puppet Agent
+    ansible.builtin.systemd:
+      state: started
+      enabled: yes
+      name: puppet

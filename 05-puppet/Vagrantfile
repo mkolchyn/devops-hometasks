@@ -1,0 +1,44 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "generic/centos8s"
+  config.vm.synced_folder ".", "/vagrant"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "2048"
+  end
+
+  config.vm.define "master", primary: true do |master|
+    master.vm.network "private_network", ip: "192.168.50.25"
+    master.vm.hostname = "master"
+
+    master.vm.provision "ansible_local" do |ansible|
+      ansible.playbook = "playbook.yml"
+    end
+  end
+
+  config.vm.define "slave1" do |slave|
+    slave.vm.network "private_network", ip: "192.168.50.26"
+    slave.vm.hostname = "slave1"
+
+    slave.vm.provision "ansible_local" do |ansible|
+      ansible.playbook = "playbook.yml"
+    end
+  end
+
+  config.vm.define "slave2" do |slave|
+    slave.vm.network "private_network", ip: "192.168.50.27"
+    slave.vm.hostname = "slave2"
+
+    slave.vm.provision "ansible_local" do |ansible|
+      ansible.playbook = "playbook.yml"
+    end
+  end
+
+  config.vm.define "mineserver.puppet" do |slave|
+    slave.vm.network "private_network", ip: "192.168.50.30"
+    slave.vm.hostname = "mineserver.puppet"
+
+    slave.vm.provision "ansible_local" do |ansible|
+      ansible.playbook = "playbook.yml"
+    end
+  end
+end 
