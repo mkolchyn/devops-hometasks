@@ -1,0 +1,4 @@
+jenkins_plugins:
+  - golang
+  - git
+  - nexus-artifact-uploader
