@@ -14,6 +14,21 @@
             </a>
           </choices>
         </hudson.model.ChoiceParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>NEXUS_IP</name>
+          <defaultValue>192.168.50.30</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>STG_IP</name>
+          <defaultValue>192.168.50.40</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>PROD_IP</name>
+          <defaultValue>192.168.50.50</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
   </properties>
@@ -50,15 +65,72 @@ go get github.com/GeertJohan/go.rice/rice
 go get github.com/wickett/word-cloud-generator/wordyapi
 go get github.com/gorilla/mux
 
-sed -i &quot;s/1.DEVELOPMENT/1.${BUILD_NUMBER}.${BRANCH}/g&quot; static/version
+sed -i &quot;s/1.DEVELOPMENT/1.${BUILD_NUMBER}/g&quot; static/version
 
-GOOS=linux GOARCH=amd64 go build -o ./artifacts/word-cloud-generator -v </command>
+GOOS=linux GOARCH=amd64 go build -o ./artifacts/word-cloud-generator -v 
+
+gzip -f artifacts/word-cloud-generator</command>
       <configuredLocalRules/>
     </hudson.tasks.Shell>
+    <sp.sd.nexusartifactuploader.NexusArtifactUploader plugin="nexus-artifact-uploader@2.14">
+      <nexusVersion>nexus3</nexusVersion>
+      <protocol>http</protocol>
+      <nexusUrl>${NEXUS_IP}:8081/</nexusUrl>
+      <groupId>${BRANCH}</groupId>
+      <version>1.${BUILD_NUMBER}</version>
+      <repository>word-cloud-build</repository>
+      <artifacts>
+        <sp.sd.nexusartifactuploader.Artifact>
+          <artifactId>word-cloud-generator</artifactId>
+          <type>gz</type>
+          <classifier></classifier>
+          <file>artifacts/word-cloud-generator.gz</file>
+        </sp.sd.nexusartifactuploader.Artifact>
+      </artifacts>
+      <credentialsId>nexus-creds</credentialsId>
+    </sp.sd.nexusartifactuploader.NexusArtifactUploader>
+    <org.jvnet.hudson.plugins.SSHBuilder plugin="ssh@2.6.1">
+      <siteName>vagrant@${STG_IP}:22</siteName>
+      <command>sudo systemctl stop wordcloud
+
+curl -X GET http://${NEXUS_IP}:8081/repository/word-cloud-build/${BRANCH}/word-cloud-generator/1.${BUILD_NUMBER}/word-cloud-generator-1.${BUILD_NUMBER}.gz --user ${NEXUS_USER}:${NEXUS_PASSWORD} -o /opt/wordcloud/word-cloud-generator.gz
+
+gunzip -f /opt/wordcloud/word-cloud-generator.gz
+chmod +x /opt/wordcloud/word-cloud-generator
+
+sudo systemctl start wordcloud</command>
+      <execEachLine>false</execEachLine>
+      <hideCommand>true</hideCommand>
+    </org.jvnet.hudson.plugins.SSHBuilder>
+    <hudson.tasks.Shell>
+      <command>res=`curl -s -H &quot;Content-Type: application/json&quot; -d &apos;{&quot;text&quot;:&quot;ths is a really really really important thing this is&quot;}&apos; http://${STG_IP}:8888/version | jq &apos;. | length&apos;`
+if [ &quot;1&quot; != &quot;$res&quot; ]; then
+  exit 99
+fi
+
+res=`curl -s -H &quot;Content-Type: application/json&quot; -d &apos;{&quot;text&quot;:&quot;ths is a really really really important thing this is&quot;}&apos; http://${STG_IP}:8888/api | jq &apos;. | length&apos;`
+if [ &quot;7&quot; != &quot;$res&quot; ]; then
+  exit 99
+fi</command>
+      <configuredLocalRules/>
+    </hudson.tasks.Shell>
+    <org.jvnet.hudson.plugins.SSHBuilder plugin="ssh@2.6.1">
+      <siteName>vagrant@${PROD_IP}:22</siteName>
+      <command>sudo systemctl stop wordcloud
+
+curl -X GET http://${NEXUS_IP}:8081/repository/word-cloud-build/${BRANCH}/word-cloud-generator/1.${BUILD_NUMBER}/word-cloud-generator-1.${BUILD_NUMBER}.gz --user ${NEXUS_USER}:${NEXUS_PASSWORD} -o /opt/wordcloud/word-cloud-generator.gz
+
+gunzip -f /opt/wordcloud/word-cloud-generator.gz
+chmod +x /opt/wordcloud/word-cloud-generator
+
+sudo systemctl start wordcloud</command>
+      <execEachLine>false</execEachLine>
+      <hideCommand>true</hideCommand>
+    </org.jvnet.hudson.plugins.SSHBuilder>
   </builders>
   <publishers>
     <hudson.tasks.ArtifactArchiver>
-      <artifacts>artifacts/word-cloud-generator</artifacts>
+      <artifacts>artifacts/word-cloud-generator.gz</artifacts>
       <allowEmptyArchive>false</allowEmptyArchive>
       <onlyIfSuccessful>false</onlyIfSuccessful>
       <fingerprint>false</fingerprint>

@@ -1,3 +1,5 @@
+---
+
 - name: Create Gobuild job directory
   ansible.builtin.file:
     path: /var/lib/jenkins/jobs/gobuild

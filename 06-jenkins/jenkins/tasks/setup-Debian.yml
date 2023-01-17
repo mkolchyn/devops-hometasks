@@ -1,3 +1,5 @@
+---
+
 - name: Add Jenkins apt repository key
   ansible.builtin.get_url:
     url: https://pkg.jenkins.io/debian-stable/jenkins.io.key
@@ -27,4 +29,9 @@
 - name: python3-jenkins lib installation
   apt:
     name: python3-jenkins
+    state: present
+
+- name: python3-jenkins lib installation
+  apt:
+    name: jq
     state: present

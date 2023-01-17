@@ -1,15 +1,4 @@
-# - name: Wait for Jenkins to start up
-#   ansible.builtin.uri:
-#     url: http://localhost:8080
-#     status_code: 200
-#     timeout: 5
-#   register: jenkins_service_status
-#   # Keep trying for 5 mins in 5 sec intervals
-#   retries: 10
-#   delay: 5
-#   until: >
-#       'status' in jenkins_service_status and
-#       jenkins_service_status['status'] == 200
+---
 
 - name: Install Jenkins plugins
   community.general.jenkins_plugin:
@@ -23,6 +12,14 @@
   until: plugin_result is success
   retries: 3
   delay: 2
+
+- name: Copy SSH plugin config file
+  ansible.builtin.copy:
+    src: /vagrant/jenkins/files/org.jvnet.hudson.plugins.SSHBuildWrapper.xml
+    dest: /var/lib/jenkins/org.jvnet.hudson.plugins.SSHBuildWrapper.xml
+    owner: jenkins
+    group: jenkins
+    mode: 0644
 
 - name: Copy Golang plugin config file
   ansible.builtin.copy:

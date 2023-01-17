@@ -1,3 +1,5 @@
+---
+
 - name: Ensure jenkins_init_folder exists.
   ansible.builtin.file:
     path: /etc/systemd/system/jenkins.service.d/
