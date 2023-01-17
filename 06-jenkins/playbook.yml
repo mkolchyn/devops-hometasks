@@ -1,5 +1,5 @@
 - name: Jenkins node configuration
-  hosts: jenkins_ansible
+  hosts: jenkins
   become: yes
 
   roles:
@@ -40,10 +40,12 @@
           password: "uploader"
           roles:
             - nx-admin
+      nexus_config_raw: true
       nexus_repos_raw_hosted:
         - name: word-cloud-build
           version_policy: release
           write_policy: allow_once
+          blob_store: default
 
 - name: Staging and Production nodes configuration
   hosts:
