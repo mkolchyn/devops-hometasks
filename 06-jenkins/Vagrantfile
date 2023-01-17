@@ -6,13 +6,42 @@ Vagrant.configure("2") do |config|
     vb.memory = "1024"
   end
 
+  config.vm.define "jenkins" do |jenkins|
+    jenkins.vm.network "private_network", ip: "192.168.50.25"
+    jenkins.vm.hostname = "jenkins"
+
+    jenkins.vm.provision "ansible_local" do |ansible|
+      ansible.playbook = "jenkins/tasks/main.yml"
+    end
+  end
   config.vm.define "jenkins_ansible" do |jenkins_ansible|
-    jenkins_ansible.vm.network "private_network", ip: "192.168.50.25"
+    jenkins_ansible.vm.network "private_network", ip: "192.168.50.26"
     jenkins_ansible.vm.hostname = "jenkins-ansible"
 
     jenkins_ansible.vm.provision "ansible_local" do |ansible|
       ansible.playbook = "main.yml"
     end
+  end
+
+  config.vm.define "nexus" do |nexus|
+    nexus.vm.network "private_network", ip: "192.168.50.30"
+    nexus.vm.hostname = "nexus"
+
+    nexus.vm.provision "ansible_local" do |ansible|
+      ansible.playbook = "Fenikks/nexus.yaml"
+    end
+  end
+
+  config.vm.define "staging" do |staging|
+    staging.vm.network "private_network", ip: "192.168.50.40"
+    staging.vm.provider("virtualbox"){ |vb| vb.memory = 256 }
+    staging.vm.hostname = "staging"
+  end
+
+  config.vm.define "production" do |production|
+    production.vm.network "private_network", ip: "192.168.50.50"
+    production.vm.provider("virtualbox"){ |vb| vb.memory = 256 }
+    production.vm.hostname = "production"
   end
 
 end 
