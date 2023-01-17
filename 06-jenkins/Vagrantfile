@@ -9,26 +9,28 @@ Vagrant.configure("2") do |config|
   config.vm.define "jenkins" do |jenkins|
     jenkins.vm.network "private_network", ip: "192.168.50.25"
     jenkins.vm.hostname = "jenkins"
-
-    jenkins.vm.provision "ansible_local" do |ansible|
-      ansible.playbook = "jenkins/tasks/main.yml"
-    end
   end
+
   config.vm.define "jenkins_ansible" do |jenkins_ansible|
     jenkins_ansible.vm.network "private_network", ip: "192.168.50.26"
     jenkins_ansible.vm.hostname = "jenkins-ansible"
 
     jenkins_ansible.vm.provision "ansible_local" do |ansible|
-      ansible.playbook = "main.yml"
+      ansible.playbook = "playbook.yml"
     end
   end
 
   config.vm.define "nexus" do |nexus|
     nexus.vm.network "private_network", ip: "192.168.50.30"
     nexus.vm.hostname = "nexus"
+  end
 
-    nexus.vm.provision "ansible_local" do |ansible|
-      ansible.playbook = "Fenikks/nexus.yaml"
+  config.vm.define "nexus_ansible" do |nexus_ansible|
+    nexus_ansible.vm.network "private_network", ip: "192.168.50.31"
+    nexus_ansible.vm.hostname = "nexus_ansible"
+
+    nexus_ansible.vm.provision "ansible_local" do |ansible|
+      ansible.playbook = "playbook.yaml"
     end
   end
 

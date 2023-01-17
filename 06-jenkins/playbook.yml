@@ -1,0 +1,13 @@
+- name: Jenkins node configuration
+  hosts: jenkins_ansible
+  become: yes
+
+  roles:
+    - jenkins
+
+- name: Nexus node configuration
+  hosts: nexus_ansible
+  become: yes
+
+  roles:
+    - nexus3-oss-main
