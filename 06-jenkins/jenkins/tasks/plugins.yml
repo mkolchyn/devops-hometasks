@@ -26,7 +26,7 @@
 
 - name: Copy Golang plugin config file
   ansible.builtin.copy:
-    src: /vagrant/files/org.jenkinsci.plugins.golang.GolangBuildWrapper.xml
+    src: /vagrant/jenkins/files/org.jenkinsci.plugins.golang.GolangBuildWrapper.xml
     dest: /var/lib/jenkins/org.jenkinsci.plugins.golang.GolangBuildWrapper.xml
     owner: jenkins
     group: jenkins

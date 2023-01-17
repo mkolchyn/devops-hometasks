@@ -28,7 +28,7 @@
 
 - name: Copy Jenkins admin config file
   ansible.builtin.copy:
-    src: /vagrant/files/admin_180825365843739614/config.xml
+    src: /vagrant/jenkins/files/admin_180825365843739614/config.xml
     dest: /var/lib/jenkins/users/admin_180825365843739614/config.xml
     owner: jenkins
     group: jenkins
@@ -36,7 +36,7 @@
 
 - name: Copy Jenkins users config file
   ansible.builtin.copy:
-    src: /vagrant/files/users.xml
+    src: /vagrant/jenkins/files/users.xml
     dest: /var/lib/jenkins/users/users.xml
     owner: jenkins
     group: jenkins

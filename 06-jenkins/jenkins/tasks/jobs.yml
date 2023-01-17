@@ -8,7 +8,7 @@
 
 - name: Copy Gobuild job config file
   ansible.builtin.copy:
-    src: /vagrant/files/jobs/gobuild/config.xml
+    src: /vagrant/jenkins/files/jobs/gobuild/config.xml
     dest: /var/lib/jenkins/jobs/gobuild/config.xml
     owner: jenkins
     group: jenkins
