@@ -1,1 +1,6 @@
 .vagrant
+08-jenkinsfile/jenkins
+08-jenkinsfile/nexus3-oss-main
+08-jenkinsfile/playbook.yml
+08-jenkinsfile/vagrantfile
+08-jenkinsfile/wordcloud.service
