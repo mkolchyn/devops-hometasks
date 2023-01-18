@@ -1,14 +1,12 @@
 - name: Jenkins node configuration
   hosts: jenkins
   become: yes
-
   roles:
     - jenkins
 
 - name: Nexus node configuration
   hosts: nexus
   become: yes
-
   tasks:
   - name: Add Java key
     apt_key:
@@ -52,7 +50,6 @@
     - staging
     - production
   become: yes
-
   tasks:
   - name: Create wordcloud dir
     ansible.builtin.file:

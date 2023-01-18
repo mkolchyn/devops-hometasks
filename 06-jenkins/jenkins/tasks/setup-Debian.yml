@@ -31,7 +31,7 @@
     name: python3-jenkins
     state: present
 
-- name: python3-jenkins lib installation
+- name: jq installation
   apt:
     name: jq
     state: present
