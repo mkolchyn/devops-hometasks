@@ -16,11 +16,13 @@ pipeline {
                 git 'https://github.com/mkolchyn/word-cloud-generator.git'
             }
         }
-        // stage('Pre-build tests') {
-        //     steps {
-        //         git 'https://github.com/mkolchyn/word-cloud-generator.git'
-        //     }
-        // }
+        stage('Pre-build tests') {
+            steps {
+                sh '''cd /var/lib/jenkins/workspace/${JOB_NAME}
+                   make lint
+                   make test'''
+            }
+        }
         stage('Build code and upload artifact to Nexus') {
             steps {
                 sh '''export GOPATH=$WORKSPACE/go
