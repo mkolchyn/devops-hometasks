@@ -8,7 +8,7 @@ pipeline {
         STG_IP='192.168.33.80'
         PROD_IP='192.168.33.85'
         NEXUS_REPO='word-cloud-build'
-        BRANCH='pipeline'
+        BRANCH='pipeline_from_GitHub'
     }
     stages {
         stage('Download Git repo') {
