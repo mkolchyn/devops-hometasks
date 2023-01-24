@@ -1,6 +1,5 @@
 FROM golang:1.16 as build
 RUN git clone https://github.com/Fenikks/word-cloud-generator.git
-#RUN make -C ./word-cloud-generator
 WORKDIR /go/word-cloud-generator 
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o /go/artifacts/word-cloud-generator
 
