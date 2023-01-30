@@ -1,0 +1,51 @@
+---
+
+- name: Ensure jenkins_init_folder exists.
+  ansible.builtin.file:
+    path: /etc/systemd/system/jenkins.service.d/
+    state: directory
+    mode: 0644
+
+- name: Ensure jenkins_init_file exists.
+  ansible.builtin.file:
+    path: /etc/systemd/system/jenkins.service.d/override.conf
+    state: touch
+    mode: 0644
+
+- name: Modify variables in jenkins init file.
+  community.general.ini_file:
+    path: /etc/systemd/system/jenkins.service.d/override.conf
+    section: Service
+    option: Environment
+    value: "\"JAVA_OPTS=-Djenkins.install.runSetupWizard=false\""
+    state: present
+
+- name: Create Jenkins admin directory
+  ansible.builtin.file:
+    path: /var/lib/jenkins/users/admin_180825365843739614
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode: 0700
+
+- name: Copy Jenkins admin config file
+  ansible.builtin.copy:
+    src: /vagrant/jenkins/files/admin_180825365843739614/config.xml
+    dest: /var/lib/jenkins/users/admin_180825365843739614/config.xml
+    owner: jenkins
+    group: jenkins
+    mode: 0644
+
+- name: Copy Jenkins users config file
+  ansible.builtin.copy:
+    src: /vagrant/jenkins/files/users.xml
+    dest: /var/lib/jenkins/users/users.xml
+    owner: jenkins
+    group: jenkins
+    mode: 0644
+
+- name: Restart Jenkins on init config changes.
+  systemd:
+    name: jenkins
+    state: started
+    daemon_reload: true

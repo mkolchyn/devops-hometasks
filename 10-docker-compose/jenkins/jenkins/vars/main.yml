@@ -1,0 +1,14 @@
+jenkins_plugins:
+  - golang
+  - git
+  - nexus-artifact-uploader
+  # - ssh
+  # - workflow-aggregator
+
+packages:
+  - openjdk-11-jre
+  - jenkins
+  - python3-jenkins
+  - git
+  # - jq
+  # - sshpass

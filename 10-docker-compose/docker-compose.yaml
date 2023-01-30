@@ -1,0 +1,30 @@
+version: "3.3"
+services:
+  jenkins:
+    tty: true
+    stdin_open: true
+    container_name: jenkins
+    depends_on:
+      - nexus
+    build:
+      context: ./jenkins
+      dockerfile: Jenkins_Dockerfile
+    networks:
+      - backhall
+    ports:
+      - "80:8080"
+
+  nexus:
+    container_name: nexus
+    tty: true
+    stdin_open: true
+    build:
+      context: ./nexus
+      dockerfile: Nexus_Dockerfile
+    networks:
+      - backhall
+    ports:
+      - "81:8081"
+
+networks:
+  backhall:

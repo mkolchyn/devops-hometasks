@@ -1,0 +1,6 @@
+- name: Jenkins node configuration
+  hosts: localhost
+  connection: local
+  become: yes
+  roles:
+    - jenkins

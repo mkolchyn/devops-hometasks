@@ -1,0 +1,22 @@
+FROM debian:latest
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && \
+    apt-get install -y apt-utils gcc python2-dev libkrb5-dev systemctl&& \
+    apt-get install python3-pip -y && \
+    pip3 install --upgrade pip && \
+    pip3 install --upgrade virtualenv && \
+    pip3 install pywinrm && \
+    pip3 install kerberos && \
+    apt install krb5-user -y && \
+    pip3 install ansible && \
+    apt-get clean
+
+RUN mkdir /vagrant
+COPY jenkins.tar /vagrant
+RUN tar -C /vagrant -xf /vagrant/jenkins.tar
+
+RUN ansible-playbook /vagrant/jenkins_playbook.yml
+
+CMD jenkins -D FOREGROUND

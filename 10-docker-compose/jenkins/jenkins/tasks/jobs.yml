@@ -1,0 +1,17 @@
+---
+
+- name: Create Gobuild job directory
+  ansible.builtin.file:
+    path: /var/lib/jenkins/jobs/gobuild
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode: 0755
+
+- name: Copy Gobuild job config file
+  ansible.builtin.copy:
+    src: /vagrant/jenkins/files/jobs/gobuild/config.xml
+    dest: /var/lib/jenkins/jobs/gobuild/config.xml
+    owner: jenkins
+    group: jenkins
+    mode: 0644
