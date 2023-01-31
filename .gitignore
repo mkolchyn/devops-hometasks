@@ -5,8 +5,7 @@
 08-jenkinsfile/vagrantfile
 08-jenkinsfile/wordcloud.service
 09-docker/Vagrantfile
-
 10-docker-compose/jenkins/jenkins
 10-docker-compose/jenkins/jenkins_playbook.yml
-10-docker-compose/nexus/nexus
+10-docker-compose/nexus/nexus3-oss-main
 10-docker-compose/nexus/nexus_playbook.yml
