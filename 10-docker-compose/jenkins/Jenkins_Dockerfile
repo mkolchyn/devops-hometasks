@@ -20,4 +20,4 @@ RUN rm /vagrant/jenkins.tar
 
 RUN ansible-playbook /vagrant/jenkins_playbook.yml
 
-CMD /usr/bin/java -Djenkins.install.runSetupWizard=false -jar /usr/share/java/jenkins.war --webroot=/var/cache/jenkins/wroot
+CMD systemctl start jenkins && tail -f /var/log/journal/jenkins.service.log
