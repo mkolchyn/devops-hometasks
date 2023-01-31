@@ -44,8 +44,12 @@
     group: jenkins
     mode: 0644
 
-- name: Restart Jenkins on init config changes.
-  systemd:
-    name: jenkins
-    state: started
-    daemon_reload: true
+# - name: Start Jenkins by shell
+#   ansible.builtin.shell: 
+#     cmd: /usr/bin/java -Djenkins.install.runSetupWizard=false -jar /usr/share/java/jenkins.war --webroot=/var/cache/jenkins/wroot
+
+# - name: Restart Jenkins on init config changes.
+#   systemd:
+#     name: jenkins
+#     state: started
+#     daemon_reload: true
