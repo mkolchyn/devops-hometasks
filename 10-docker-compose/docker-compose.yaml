@@ -16,8 +16,6 @@ services:
 
   nexus:
     container_name: nexus
-    tty: true
-    stdin_open: true
     build:
       context: ./nexus
       dockerfile: Nexus_Dockerfile

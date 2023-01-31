@@ -20,4 +20,4 @@ RUN tar -C /vagrant -xf /vagrant/nexus.tar
 
 RUN ansible-playbook /vagrant/nexus_playbook.yml
 
-CMD nexus -D FOREGROUND
+CMD /opt/nexus-latest/bin/nexus start && tail -f /var/nexus/log/nexus.log
