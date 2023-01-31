@@ -1,7 +1,0 @@
----
-
-- include_tasks: setup-Debian.yml
-- include_tasks: settings.yml
-- include_tasks: jobs.yml
-- include_tasks: credentials.yml
-- include_tasks: plugins.yml
