@@ -17,6 +17,7 @@ RUN apt-get update && \
 RUN mkdir /vagrant
 COPY nexus.tar /vagrant
 RUN tar -C /vagrant -xf /vagrant/nexus.tar
+RUN rm /vagrant/nexus.tar
 
 RUN ansible-playbook /vagrant/nexus_playbook.yml
 

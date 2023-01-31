@@ -16,7 +16,8 @@ RUN apt-get update && \
 RUN mkdir /vagrant
 COPY jenkins.tar /vagrant
 RUN tar -C /vagrant -xf /vagrant/jenkins.tar
+RUN rm /vagrant/jenkins.tar
 
 RUN ansible-playbook /vagrant/jenkins_playbook.yml
 
-CMD jenkins -D FOREGROUND
+CMD /usr/bin/java -Djenkins.install.runSetupWizard=false -jar /usr/share/java/jenkins.war --webroot=/var/cache/jenkins/wroot
