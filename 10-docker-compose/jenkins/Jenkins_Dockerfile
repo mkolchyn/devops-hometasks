@@ -1,6 +1,7 @@
 FROM debian:latest
 
-ENV DEBIAN_FRONTEND=noninteractive LANG=C.UTF-8
+ENV LANG C.UTF-8
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
     apt-get install -y apt-utils gcc python2-dev libkrb5-dev systemctl&& \
@@ -11,6 +12,7 @@ RUN apt-get update && \
     pip3 install kerberos && \
     apt install krb5-user -y && \
     pip3 install ansible && \
+    apt install -y openjdk-17-jre && \
     apt-get clean
 
 RUN mkdir /vagrant
