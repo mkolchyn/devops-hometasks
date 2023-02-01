@@ -1,6 +1,6 @@
 FROM debian:latest
 
-ENV DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND=noninteractive LANG=C.UTF-8
 
 RUN apt-get update && \
     apt-get install -y apt-utils gcc python2-dev libkrb5-dev systemctl&& \
