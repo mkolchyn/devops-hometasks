@@ -1,6 +1,6 @@
 name: GitHub Actions Demo
 runs-on: self-hosted
-on: [push]
+on: push
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
