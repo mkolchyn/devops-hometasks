@@ -10,3 +10,4 @@
 10-docker-compose/nexus/nexus3-oss-main*
 10-docker-compose/nexus/nexus_playbook.yml
 10-docker-compose/Vagrantfile
+11-github-actions/Vagrantfile
