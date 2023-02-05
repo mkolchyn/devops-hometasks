@@ -5,6 +5,5 @@ jobs:
   itacad_hw-11:
     runs-on: self-hosted
     steps:
-      - name: Create wcg docker image
-        uses: mkolchyn/wcg_docker_action@v1
-      - run: docker images
+      - name: Check out repo
+        uses: actions/checkout@v2
