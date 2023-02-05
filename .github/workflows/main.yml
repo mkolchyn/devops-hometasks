@@ -12,8 +12,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.ACTION_TOKEN }}
-      - name: Build the WCG Docker image
-        run: |
-             docker build . --tag ghcr.io/${{ github.actor }}/wcg:latest -f ./09-docker/Dockerfile.multi
-             docker run ghcr.io/${{ github.actor }}/wcg:latest
-             docker push ghcr.io/${{ github.actor }}/wcg:latest
+      - name: Build WCG Docker image
+        run: docker build --tag ghcr.io/${{ github.actor }}/wcg:latest -f ./09-docker/Dockerfile.multi .
+      - name: Publish WCG Docker image
+        run: docker push ghcr.io/${{ github.actor }}/wcg:latest
