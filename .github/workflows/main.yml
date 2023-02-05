@@ -14,6 +14,6 @@ jobs:
           password: ${{ secrets.ACTION_TOKEN }}
       - name: Build the WCG Docker image
         run: |
-             docker build . --tag ghcr.io/${{ github.actor }}/wcg:latest -f Dockerfile.multi
+             docker build . --tag ghcr.io/${{ github.actor }}/wcg:latest -f ./09-docker/Dockerfile.multi
              docker run ghcr.io/${{ github.actor }}/wcg:latest
              docker push ghcr.io/${{ github.actor }}/wcg:latest
