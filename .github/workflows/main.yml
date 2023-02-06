@@ -1,11 +1,11 @@
-name: IT academy Homework 11
+name: IT academy Homework 11 - mkolchyn
 
 on: 
   push:
   workflow_dispatch:
 jobs:
   itacad_hw-11:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3.3.0
       - name: Login to GitHub Container Registry
