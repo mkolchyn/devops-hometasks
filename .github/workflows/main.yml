@@ -1,12 +1,23 @@
-name: GitHub Actions Demo
+name: IT academy Homework 11 - mkolchyn
 
-on: push
+on: 
+  push:
+  workflow_dispatch:
 jobs:
-  Explore-GitHub-Actions:
-    runs-on: self-hosted
+  itacad_hw-11:
+    runs-on: ubuntu-latest
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3.3.0
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2.1.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.ACTION_TOKEN }}
+      - name: Build and push WCG Docker image
+        run: |
+          repository_owner=${{ github.repository_owner }}
+          repository_owner_lowercase=$(echo "$repository_owner" | tr '[:upper:]' '[:lower:]')
+          docker build -t ghcr.io/${repository_owner_lowercase}/wcg:${{ github.sha }} -t ghcr.io/${{ github.repository_owner }}/wcg:latest -f ./09-docker/Dockerfile.multi .
+          docker push ghcr.io/${repository_owner_lowercase}/wcg:${{ github.sha }}
+          docker push ghcr.io/${repository_owner_lowercase}/wcg:latest
