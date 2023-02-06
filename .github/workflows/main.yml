@@ -17,5 +17,5 @@ jobs:
       - name: Publish WCG Docker image
         run: docker push ghcr.io/${{ github.actor }}/wcg:latest
         
-      - run: echo ${{ GITHUB_SHA }}
-      - run: echo ${{ GITHUB_REPOSITORY_OWNER }}
+      - run: echo ${{ github.sha }}
+      - run: echo ${{ github.repository_owner }}
