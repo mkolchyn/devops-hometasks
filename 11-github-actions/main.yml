@@ -18,6 +18,6 @@ jobs:
         run: |
           repository_owner=${{ github.repository_owner }}
           repository_owner_lowercase=$(echo "$repository_owner" | tr '[:upper:]' '[:lower:]')
-          docker build -t ghcr.io/${repository_owner_lowercase}/wcg:${{ github.sha }} -t ghcr.io/${{ github.repository_owner }}/wcg:latest -f Dockerfile.multi .
+          docker build -t ghcr.io/${repository_owner_lowercase}/wcg:${{ github.sha }} -t ghcr.io/${repository_owner_lowercase}/wcg:latest -f Dockerfile.multi .
           docker push ghcr.io/${repository_owner_lowercase}/wcg:${{ github.sha }}
           docker push ghcr.io/${repository_owner_lowercase}/wcg:latest
