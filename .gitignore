@@ -11,3 +11,5 @@
 10-docker-compose/nexus/nexus_playbook.yml
 10-docker-compose/Vagrantfile
 11-github-actions/Vagrantfile
+12-kubernetes/Vagrantfile
+12-kubernetes/tmp.yml
