@@ -13,3 +13,8 @@
 11-github-actions/Vagrantfile
 12-kubernetes/Vagrantfile
 12-kubernetes/tmp.yml
+13-terraform/Vagrantfile
+13-terraform/config/.terraform*
+13-terraform/config/terraform*
+13-terraform/github_uploader/.terraform*
+13-terraform/github_uploader/terraform*
