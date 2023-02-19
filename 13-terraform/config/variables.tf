@@ -26,7 +26,7 @@ variable "secret_docker_username" {
   default = "mkolchyn"
 }
 variable "secret_docker_password" {
-  default = "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"
+  default = "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" // The token has read:packages permission only
 }
 
 variable "deployment_name" {

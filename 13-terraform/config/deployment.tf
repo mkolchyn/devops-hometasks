@@ -1,5 +1,5 @@
 resource "kubernetes_deployment_v1" "wcg-dep" {
-    depends_on = [
+  depends_on = [
     kubernetes_namespace_v1.mkolchyn-namespace,
     kubernetes_secret_v1.github-pull-secret
   ]

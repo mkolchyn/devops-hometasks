@@ -1,13 +1,13 @@
 resource "kubernetes_ingress_v1" "wcg_ingress" {
-    depends_on = [
+  depends_on = [
     kubernetes_service_v1.wcg-service
   ]
   metadata {
     name      = var.ingress_name
     namespace = var.namespace_name
-    # annotations = {
-    #   nginx.ingress.kubernetes.io/rewrite-target = "/"
-    # }
+    annotations = {
+      "nginx.ingress.kubernetes.io/rewrite-target" = "/"
+    }
   }
 
   spec {
